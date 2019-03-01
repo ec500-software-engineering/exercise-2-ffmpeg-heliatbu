@@ -39,6 +39,7 @@ if __name__ == '__main__':
                 queue_480.put(file)
             if queue_720.qsize() == 0:
                 queue_720.put(file)
+            break
 
     thread1.start()
     thread2.start()
