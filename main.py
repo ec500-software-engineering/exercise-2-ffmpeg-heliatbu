@@ -1,6 +1,7 @@
 #Copyright 2019 heli@bu.edu by He Li
-
+import os
 import subprocess
+import json
 from threading import Thread
 from queue import Queue
 
@@ -8,33 +9,41 @@ queue_720 = Queue()
 queue_480 = Queue()
 
 def ffmpeg_720():
-    while not queue_720.empty():
-        filename = queue_720.get()
-        file = filename.split('.')
-        output_name = file[0] + '_720.mp4'
-        cmd = 'ffmpeg -y -i {input} -b:v {bit_rate}M -r {fps} -s hd{res} {output}'
-        cmd = cmd.format(input = filename, bit_rate = 30, fps = 60, res= 720, output = output_name)
+    try:
+        file = queue_720.get()
+        filename = file.split('.')
+        output_name = filename[0] + '_720p.mp4'
+        cmd = 'ffmpeg -i {input} -b:v {bit_rate}M -r {fps} -s hd{res} {output}'
+        cmd = cmd.format(input=file, bit_rate=2, fps=30, res=720, output=output_name)
         subprocess.run(cmd)
-        print('Convert ' + filename + ' to 720p successfully.')
+        print('Convert ' + file + ' to 720p successfully.')
+    except Exception:
+        print(Exception)
 
 def ffmpeg_480():
-    while not queue_480.empty():
-        filename = queue_480.get()
-        file = filename.split('.')
-        output_name = file[0] + '_480.mp4'
-        cmd = 'ffmpeg -y -i {input} -b:v {bit_rate}M -r {fps} -s hd{res} {output}'
-        cmd = cmd.format(input=filename, bit_rate=30, fps=60, res=480, output=output_name)
+    try:
+        file = queue_480.get()
+        filename = file.split('.')
+        output_name = filename[0] + '_480p.mp4'
+        cmd = 'ffmpeg -i {input} -b:v {bit_rate}M -r {fps} -s hd{res} {output}'
+        cmd = cmd.format(input=file, bit_rate=2, fps=30, res=480, output=output_name)
         subprocess.run(cmd)
-        print('Convert ' + filename + ' to 480p successfully.')
+        print('Convert ' + file + ' to 480p successfully.')
+    except Exception:
+        print(Exception)
 
-def main(input_name):
+def main():
+
     thread1 = Thread(target=ffmpeg_720)
     thread2 = Thread(target=ffmpeg_480)
-    queue_480.put(input_name)
-    queue_720.put(input_name)
+    try:
+        queue_480.put("video.mp4")
+        queue_720.put("video.mp4")
+    except Exception:
+        print(Exception)
     thread1.start()
     thread2.start()
     print("finished.")
 
 if __name__ == '__main__':
-    main("video.mp4")
+    main()
