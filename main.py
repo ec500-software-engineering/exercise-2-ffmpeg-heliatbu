@@ -30,7 +30,6 @@ def ffmpeg_480():
         print(Exception)
 
 def main():
-
     thread1 = Thread(target=ffmpeg_720)
     thread2 = Thread(target=ffmpeg_480)
     try:
