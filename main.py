@@ -1,9 +1,9 @@
 #Copyright 2019 heli@bu.edu by He Li
-import os
+
 import subprocess
 from threading import Thread
 from queue import Queue
-import pytest
+
 queue_720 = Queue()
 queue_480 = Queue()
 
@@ -27,19 +27,13 @@ def ffmpeg_480():
         subprocess.run(cmd)
         print('Convert ' + filename + ' to 480p successfully.')
 
-if __name__ == '__main__':
+def main(input_name):
     thread1 = Thread(target=ffmpeg_720)
     thread2 = Thread(target=ffmpeg_480)
-    for file in os.listdir(os.getcwd()):
-        if file.endswith('.mp4'):
-            '''
-            Limit video number to 1
-            '''
-            if queue_480.qsize() == 0:
-                queue_480.put(file)
-            if queue_720.qsize() == 0:
-                queue_720.put(file)
-            break
-
+    queue_480.put(input_name)
+    queue_720.put(input_name)
     thread1.start()
     thread2.start()
+
+if __name__ == '__main__':
+    main("video.mp4")
