@@ -20,11 +20,4 @@ def test_duration():
     meta_720 = ffprobe(fnout2)
     duration_720 = float(meta_720['streams'][0]['duration'])
 
-    if orig_duration == duration_480 == duration_720:
-        return True
-    else:
-        return False
-
-
-if __name__ == '__main__':
-    test_duration()
+   
